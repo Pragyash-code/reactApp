@@ -8,60 +8,60 @@ export default function CheckoutForm() {
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  useEffect(() => {
-    if (!stripe || !elements) {
-      return;
-    }
+//   useEffect(() => {
+//     if (!stripe || !elements) {
+//       return;
+//     }
 
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
+//     const clientSecret = new URLSearchParams(window.location.search).get(
+//       "payment_intent_client_secret"
+//     );
 
-    if (!clientSecret) {
-      return;
-    }
+//     if (!clientSecret) {
+//       return;
+//     }
 
-    stripe
-    .retrievePaymentIntent(clientSecret)
-    .then(({ paymentIntent }) => {
-      console.log("paymentIntent", paymentIntent);
+//     stripe
+//     .retrievePaymentIntent(clientSecret)
+//     .then(({ paymentIntent }) => {
+//       console.log("paymentIntent", paymentIntent);
 
-      // Make a POST request to the Spring Boot server
-      fetch("/process-payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // You can pass any necessary data in the body
-        body: JSON.stringify({
-          paymentIntentId: paymentIntent.id,
-          // Add any other relevant payment information
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          switch (data.status) {
-            case "succeeded":
-              setMessage("Payment succeeded!!");
-              break;
-            case "processing":
-              setMessage("Payment is processing!!");
-              break;
-            default:
-              setMessage("Something went wrong!!");
-              break;
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          setMessage("Error occurred during payment processing");
-        });
-    })
-    .catch((error) => {
-      console.error("Error retrieving payment intent:", error);
-      setMessage("Error occurred while retrieving payment intent");
-    });
-}, [stripe, elements]);
+//       // Make a POST request to the Spring Boot server
+//       fetch("/process-payment", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         // You can pass any necessary data in the body
+//         body: JSON.stringify({
+//           paymentIntentId: paymentIntent.id,
+//           // Add any other relevant payment information
+//         }),
+//       })
+//         .then((response) => response.json())
+//         .then((data) => {
+//           switch (data.status) {
+//             case "succeeded":
+//               setMessage("Payment succeeded!!");
+//               break;
+//             case "processing":
+//               setMessage("Payment is processing!!");
+//               break;
+//             default:
+//               setMessage("Something went wrong!!");
+//               break;
+//           }
+//         })
+//         .catch((error) => {
+//           console.error("Error:", error);
+//           setMessage("Error occurred during payment processing");
+//         });
+//     })
+//     .catch((error) => {
+//       console.error("Error retrieving payment intent:", error);
+//       setMessage("Error occurred while retrieving payment intent");
+//     });
+// }, [stripe, elements]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
